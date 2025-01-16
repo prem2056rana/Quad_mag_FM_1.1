@@ -1,0 +1,35 @@
+[33mcommit d45db303e99615b2ed644ecffd9598c97185a6b0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: sangam11 <sangam.thapa218@gmail.com>
+Date:   Tue Oct 1 18:13:36 2024 +0545
+
+    working epdm data writing
+
+[33mcommit 037cbb8bcbc5a2d9baf01c41f071f98c33c6ebdd[m
+Author: sangam11 <sangam.thapa218@gmail.com>
+Date:   Tue Oct 1 10:22:52 2024 +0545
+
+    writing issue resolved
+
+[33mcommit e19c90367a361c8aabbfe9a1869d4bcede2aff74[m
+Author: sangam11 <sangam.thapa218@gmail.com>
+Date:   Mon Sep 30 11:04:20 2024 +0545
+
+    updated driver code
+
+[33mcommit 442f2fb65fba6c60eb3e539756f2abfd7e9f48f0[m
+Author: sangam11 <sangam.thapa218@gmail.com>
+Date:   Thu Sep 26 06:44:53 2024 +0545
+
+    updated readme
+
+[33mcommit 195f9658fa90b253a64dbded0cc4af2d26632d38[m
+Author: sangam11 <sangam.thapa218@gmail.com>
+Date:   Thu Sep 26 06:42:30 2024 +0545
+
+    added readme
+
+[33mcommit a9f5aa5dfef030e5165ac45cc27d283f0a930970[m
+Author: sangam11 <sangam.thapa218@gmail.com>
+Date:   Wed Sep 25 20:14:27 2024 +0545
+
+    regular commit littlefs working in barebone

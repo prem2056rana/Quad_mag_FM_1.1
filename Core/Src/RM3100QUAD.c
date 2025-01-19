@@ -18,7 +18,8 @@
 #define SPI_SSN_LOW 0
 
 float gain = 38.00;  //Gain for 100 cycle count
-#define DATA_SIZE 250
+#define DATA_SIZE 100
+uint16_t data_counter=0;
 uint8_t data1[DATA_SIZE];
 uint32_t counter=0;
 extern SPI_HandleTypeDef hspi1;
@@ -248,7 +249,9 @@ void Comb_measurement(int chip_select) {
         mag_data[5] = z_axis[chip_select] & 0xFF;
         for(uint8_t i =0;i<6;i++){
         	data1[counter++] = mag_data[i];
+        	data_counter++;
         }
+
 
     if(counter + 12 > DATA_SIZE){
     	write_to_file("/epdm.txt", data1, counter);
@@ -256,8 +259,13 @@ void Comb_measurement(int chip_select) {
 //    	HAL_UART_Transmit(&huart1, data1, counter, 1000);
 
         HAL_UART_Transmit(&huart2, data1,counter, 1000);
+
+//        HAL_UART_Transmit(&huart1, data_counter,sizeof(data_counter), 1000);
+	      myDebug("%d\n",data_counter);
+
     	HAL_UART_Transmit(&huart1, "Data written to flash\n", sizeof("Data written to flash\n"), 1000);
     	counter = 0;
+
     }
 
 

@@ -67,6 +67,8 @@ typedef struct{
 	uint32_t bootCount;
 }app_count_t;
 uint8_t data[20];
+
+
 app_count_t Counter = {0};
 //Command for run in differents minutes
 uint8_t COMMAND1[] = {0x53,0x0e,0x0d,0x0e,0x01,0x7e}; //Command for 1 minutes
@@ -88,20 +90,6 @@ static void MX_USART2_UART_Init(void);
 static void MX_RTC_Init(void);
 static void MX_USB_PCD_Init(void);
 /* USER CODE BEGIN PFP */
-//uint8_t OBC_HANDSHAKE(){
-//	memset(OBC_HANDSHAKE_RX, '\0', sizeof(OBC_HANDSHAKE_RX));
-//	memset(OBC_HANDSHAKE_TX, '\0', sizeof(OBC_HANDSHAKE_TX));
-//	OBC_HANDSHAKE_SUCESS = 0;
-//	do{
-//	if(HAL_UART_Receive(&huart2, OBC_HANDSHAKE_RX, sizeof(OBC_HANDSHAKE_RX),1000)==HAL_OK){
-//		if(HAL_UART_Transmit(&huart2, OBC_HANDSHAKE_RX, sizeof(OBC_HANDSHAKE_RX), 3000)==HAL_OK){
-//			OBC_HANDSHAKE_SUCESS = 1;
-//			HAL_UART_Transmit(&huart1, "HANDSHAKE SUCCESSFULLY\n", "HANDSHAKE SUCCESSFULLY", 1000);
-//		}
-//	}
-//	}while(!OBC_HANDSHAKE_SUCESS);
-//	return OBC_HANDSHAKE_SUCESS;
-//}
 //Handshake between OBC(Onboard computer) and EPDM board and compare command for run in different minutes
 uint8_t OBC_COMMAND(){
 	memset(OBC_HANDSHAKE_RX, '\0', sizeof(OBC_HANDSHAKE_RX));
@@ -146,8 +134,10 @@ uint8_t OBC_COMMAND(){
 
 				}
 			else{
+				  Read_time = 5;
+				  OBC_HANDSHAKE_SUCESS = 1;
 
-				  HAL_UART_Transmit(&huart1, "xxxxxxCOMMAND ERRORxxxxxx", sizeof("xxxxxxCOMMAND ERRORxxxxxx"), 1000);
+//				  HAL_UART_Transmit(&huart1, "xxxxxxCOMMAND ERRORxxxxxx", sizeof("xxxxxxCOMMAND ERRORxxxxxx"), 1000);
 			}
 		}
 	}
@@ -198,11 +188,6 @@ int main(void)
   MX_RTC_Init();
   MX_USB_PCD_Init();
   /* USER CODE BEGIN 2 */
-//for(int i=0;i<6;i++){
-//
-// 	 write_to_file("/epdm_re.txt", "tet sfm test\n", sizeof("tet sfm test\n"));
-// 	 HAL_Delay(10000);
-//}
   HAL_UART_Transmit(&huart1, "*****************EPDM starting**************\n",sizeof("*****************EPDM starting**************\n"),1000);
 
 //  OBC_HANDSHAKE();
@@ -212,6 +197,7 @@ int main(void)
   HAL_GPIO_WritePin(GPIOB, MSN_EN3_Pin, SET); // Set PA15 high
   HAL_GPIO_WritePin(GPIOB, MSN_EN4_Pin, SET); // Set PA8 high
   uint8_t data[20];
+
 //Read ID of Flash memory
   while(1){
 	  Read_ID(&hspi2, GPIOB, GPIO_PIN_12, data);
@@ -226,7 +212,7 @@ int main(void)
     	Continuous_Mode(i);
     	TMRC_Mode(i);
     }
-    int count=0;
+    uint32_t count=0;
     __init_storage();
     uint8_t last[]={'E','P','D','M'}; //Stores before reading data and after reading data
     uint8_t eom[]={0xff,0xd9,'\0'}; //OBC stops mission if received
@@ -247,7 +233,6 @@ int main(void)
 
     	      // Transmit the total count of bytes sent
     	      myDebug("%d",count);
-    //	      HAL_UART_Transmit(&huart1, count, sizeof(count), 1000);
     	      count = 0;  // Reset count after transmitting
     	      HAL_UART_Transmit(&huart2, last, sizeof(last), 1000); //after reading
     	      HAL_UART_Transmit(&huart2, eom, sizeof(eom), 1000); // OBC stops or turned off EPDM mission
@@ -264,157 +249,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-//	  if (Read_time >= 1 && Read_time <= 5) {
-//	      int max_time = Read_time * 60;  // max_time in seconds (1 minute per Read_time)
-//	      time_counter += 1;
-//
-//	      if (time_counter <= max_time) {
-//	          for (int i = 0; i < 4; i++) {
-//	              Mea_Result(i);
-//	              Comb_measurement(i);
-//	              count++;
-//	          }
-//	          HAL_Delay(100);
-//	      } else {
-//	          HAL_UART_Transmit(&huart2, eom, sizeof(eom), 1000);
-//	          HAL_Delay(60000);  // Delay for 1 minute after sending EOM
-//	      }
-//	  }
-//	  else {
-//		  HAL_UART_Transmit(&huart1, "xxxxxxCOMMAND ERRORxxxxxx", sizeof("xxxxxxCOMMAND ERRORxxxxxx"), 1000);
-//	  }
-//	  if (Read_time >= 1 && Read_time <= 5) {
-//	      uint32_t startTime = HAL_GetTick();  // Record the start time
-//	      uint32_t maxDuration = Read_time * 60 * 1000;  // Maximum duration in milliseconds
-//
-//	      while (HAL_GetTick() - startTime < maxDuration) {  // Run loop according to the value of Read_time
-//	          for (int i = 0; i < 4; i++) {
-//	              Mea_Result(i);
-//	              Comb_measurement(i);
-//	              count += 6;
-//	          }
-//	          HAL_Delay(100);  // Small delay between measurements
-//	      }
-//
-//	      // Transmit the total count of bytes sent
-//	      myDebug("%d",count);
-////	      HAL_UART_Transmit(&huart1, count, sizeof(count), 1000);
-//	      count = 0;  // Reset count after transmitting
-//	      HAL_UART_Transmit(&huart2, last, sizeof(last), 1000); //after reading
-//	      HAL_UART_Transmit(&huart2, eom, sizeof(eom), 1000); // OBC stops or turned off EPDM mission
-//	      HAL_Delay(90000);  // Wait for 1 minute after sending EOM
-//
-//	  } else {
-//	      // If Read_time is not in the valid range, send an error message
-//	      HAL_UART_Transmit(&huart1, (uint8_t*)"xxxxxx**********ReadTimeInvalid**********xxxxxx", sizeof("xxxxxx**********ReadTimeInvalid**********xxxxxx"), 1000);
-//	  }
-
-//	  if(Read_time == 1)
-//	  {
-//		  time_counter +=1;
-//		 	  if(time_counter <= 600){
-//		 		  for(int i=0;i<4;i++){
-//
-//		 		  		  Mea_Result(i);
-//		 		  		  Comb_measurement(i);
-//		 		  	      count++;
-//		 		  	      }
-//
-//		 		  	  HAL_Delay(100);
-//		 	  }
-//		 	  else{
-//		 		  HAL_UART_Transmit(&huart2, eom, sizeof(eom),1000);
-//		 		  HAL_Delay(60000);
-//		 	  }
-//	  }
-//	  else if(Read_time == 2)
-//	  {
-//		  time_counter +=1;
-//		  		 	  if(time_counter <= 1200){
-//		  		 		  for(int i=0;i<4;i++){
-//
-//		  		 		  		  Mea_Result(i);
-//		  		 		  		  Comb_measurement(i);
-//		  		 		  	      count++;
-//		  		 		  	      }
-//
-//		  		 		  	  HAL_Delay(100);
-//		  		 	  }
-//		  		 	  else{
-//		  		 		  HAL_UART_Transmit(&huart2, eom, sizeof(eom),1000);
-//		  		 		  HAL_Delay(60000);
-//		  		 	  }
-//	  }
-//	   else if(Read_time == 3)
-//	  	  {
-//	  		  time_counter +=1;
-//	  		  		 	  if(time_counter <= 1800){
-//	  		  		 		  for(int i=0;i<4;i++){
-//
-//	  		  		 		  		  Mea_Result(i);
-//	  		  		 		  		  Comb_measurement(i);
-//	  		  		 		  	      count++;
-//	  		  		 		  	      }
-//
-//	  		  		 		  	  HAL_Delay(100);
-//	  		  		 	  }
-//	  		  		 	  else{
-//	  		  		 		  HAL_UART_Transmit(&huart2, eom, sizeof(eom),1000);
-//	  		  		 		  HAL_Delay(60000);
-//	  		  		 	  }
-//	  	  }
-//	  else if(Read_time == 4)
-//	  	  {
-//	  		  time_counter +=1;
-//	  		  		 	  if(time_counter <= 2400){
-//	  		  		 		  for(int i=0;i<4;i++){
-//
-//	  		  		 		  		  Mea_Result(i);
-//	  		  		 		  		  Comb_measurement(i);
-//	  		  		 		  	      count++;
-//	  		  		 		  	      }
-//
-//	  		  		 		  	  HAL_Delay(100);
-//	  		  		 	  }
-//	  		  		 	  else{
-//	  		  		 		  HAL_UART_Transmit(&huart2, eom, sizeof(eom),1000);
-//	  		  		 		  HAL_Delay(60000);
-//	  		  		 	  }
-//	  	  }
-//	  else if(Read_time == 5)
-//	  	  {
-//	  		  time_counter +=1;
-//	  		  		 	  if(time_counter <= 3000){
-//	  		  		 		  for(int i=0;i<4;i++){
-//
-//	  		  		 		  		  Mea_Result(i);
-//	  		  		 		  		  Comb_measurement(i);
-//	  		  		 		  	      count++;
-//	  		  		 		  	      }
-//
-//	  		  		 		  	  HAL_Delay(100);
-//	  		  		 	  }
-//	  		  		 	  else{
-//	  		  		 		  HAL_UART_Transmit(&huart2, eom, sizeof(eom),1000);
-//	  		  		 		  HAL_Delay(60000);
-//	  		  		 	  }
-//	  	  }
-//	  else
-//	  {
-//		  HAL_UART_Transmit(&huart1, "xxxxxxCOMMAND ERRORxxxxxx", sizeof("xxxxxxCOMMAND ERRORxxxxxx"), 1000);
-//	  }
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-//		  count++;
-//		  if(count>0){
-//			  break;
-//		  }
-
-
 
 
   }

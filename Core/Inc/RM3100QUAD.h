@@ -10,7 +10,6 @@
 #include "main.h"
 #include "stm32f1xx_hal_rtc.h"
 
-
 //Not necessary to send multiple register address, only first address should be send then others register value automatically increments on the clock cycle
 //RM3100 cycle count register address
 #define rm3100_MSB_X 0x04
